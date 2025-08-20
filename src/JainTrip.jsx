@@ -22,8 +22,14 @@ import {
   MessageCircle,
   User,
   MapPin,
+  Plane,
+  Menu,
+  X,
 } from "lucide-react";
+import { TypeAnimation } from "react-type-animation";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import { Drawer } from "antd";
+
 const PRIMARY_BLUE = "#3460F4";
 const PRIMARY_YELLOW = "#FFFF00";
 
@@ -35,8 +41,7 @@ const sampleTours = [
     startDate: "2025-10-06",
     endDate: "2025-10-12",
     price: 103900,
-    image:
-      "./TourImages/Dubai.jpg",
+    image: "./TourImages/Dubai.jpg",
     highlights: [
       "All-Inclusive Package",
       "Return international flights from Bhopal/Raipur/Nagpur/Pune (fare included upto Rs. 30,000)",
@@ -50,7 +55,7 @@ const sampleTours = [
       "Dubai Dolphinarium",
       "Global Village",
       "Abu Dhabi Sightseeing – including BAPS Hindu Mandir & Sheikh Zayed Grand Mosque",
-      "Yas Island Theme Park: SeaWorld + choice of Warner Bros. World / Ferrari World"
+      "Yas Island Theme Park: SeaWorld + choice of Warner Bros. World / Ferrari World",
     ],
     type: "International",
   },
@@ -61,8 +66,7 @@ const sampleTours = [
     startDate: "2025-12-07",
     endDate: "2025-12-15",
     price: 77700,
-    image:
-      "./TourImages/Bhutan.jpg",
+    image: "./TourImages/Bhutan.jpg",
     highlights: [
       "All-Inclusive Package",
       "Delhi - Paro - Delhi Flights (fare included up toRs.38,000)",
@@ -76,7 +80,7 @@ const sampleTours = [
       "Tachogang Iron Bridge - Paro",
       "Simply Bhutan",
       "Paro Taktsang (Tiger's Nest Monastery) - Paro",
-      "Sustainable Development Fee @ 1200/per day"
+      "Sustainable Development Fee @ 1200/per day",
     ],
     type: "International",
   },
@@ -100,7 +104,7 @@ const sampleTours = [
       "Cu Chi Tunnels",
       "Independence Palace",
       "Museum of War Remnants",
-      "Vietnam Single Entry VISA"
+      "Vietnam Single Entry VISA",
     ],
     type: "International",
   },
@@ -117,7 +121,7 @@ export default function JainTripApp() {
   const [selectedTour, setSelectedTour] = useState(null);
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [showBookingSuccess, setShowBookingSuccess] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const filteredTours = useMemo(() => {
     return sampleTours.filter((t) => {
       if (filter !== "All" && t.type !== filter) return false;
@@ -144,68 +148,49 @@ export default function JainTripApp() {
     setShowBookingSuccess(true);
     setTimeout(() => setShowBookingSuccess(false), 4000);
   }
-
+  const handleClose = () => setIsOpen(false);
   return (
     <div className="min-h-screen font-sans text-gray-800">
       {/* Header */}
       <header
-        className="sticky top-0 z-40 bg-white shadow-sm"
-        style={{ backgroundColor: "#355ff3" }}
+        className="sticky top-0 z-40 shadow-sm"
+        style={{ backgroundColor: PRIMARY_BLUE }}
       >
         <div className="px-4">
           <div className="flex items-center justify-between h-16">
+            {/* Logo */}
             <div className="flex items-center gap-3">
-              <div>
-                <img
-                  src="https://res.cloudinary.com/dkwjkakbc/image/upload/v1755268307/jain_trip_log_without_bg_kuhpke.png"
-                  width={150}
-                  height={50}
-                  alt="logo"
-                />
-              </div>
+              <img
+                src="https://res.cloudinary.com/dkwjkakbc/image/upload/v1755268307/jain_trip_log_without_bg_kuhpke.png"
+                width={150}
+                height={50}
+                alt="logo"
+              />
             </div>
 
+            {/* Desktop Menu */}
             <nav className="hidden md:flex items-center gap-6 text-sm">
-              <a
-                href="#tours"
-                className="hover:underline"
-                style={{ color: "#fff" }}
-              >
+              <a href="#tours" className="hover:underline text-white">
                 Tours
               </a>
-              <a
-                href="#who"
-                className="hover:underline"
-                style={{ color: "#fff" }}
-              >
+              <a href="#who" className="hover:underline text-white">
                 Who We Are
               </a>
-              <a
-                href="#why"
-                className="hover:underline"
-                style={{ color: "#fff" }}
-              >
+              <a href="#why" className="hover:underline text-white">
                 Why us?
               </a>
-              <a
-                href="#testimonials"
-                className="hover:underline"
-                style={{ color: "#fff" }}
-              >
+              <a href="#testimonials" className="hover:underline text-white">
                 Testimonials
               </a>
-              <a
-                href="#contact"
-                className="hover:underline"
-                style={{ color: "#fff" }}
-              >
+              <a href="#contact" className="hover:underline text-white">
                 Contact
               </a>
             </nav>
 
+            {/* Call Button (Desktop) */}
             <a
               href="tel:+918821079210"
-              className="flex items-center gap-2 px-3 py-2 rounded border"
+              className="hidden md:flex items-center gap-2 px-3 py-2 rounded border"
               style={{ borderColor: PRIMARY_BLUE }}
             >
               <Phone size={16} color="#ffffff" />
@@ -213,65 +198,109 @@ export default function JainTripApp() {
                 +91 88210 79210
               </span>
             </a>
+
+            {/* Mobile Hamburger */}
+            <button
+              className="md:hidden p-2 text-white"
+              onClick={() => setIsOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
           </div>
         </div>
+
+        {/* Antd Drawer for Mobile Menu */}
+        <Drawer
+          title="Menu"
+          placement="right"
+          onClose={handleClose}
+          open={isOpen}
+          bodyStyle={{ padding: "20px" }}
+        >
+          <nav className="flex flex-col gap-4">
+            <a href="#tours" onClick={handleClose}>
+              Tours
+            </a>
+            <a href="#who" onClick={handleClose}>
+              Who We Are
+            </a>
+            <a href="#why" onClick={handleClose}>
+              Why us?
+            </a>
+            <a href="#testimonials" onClick={handleClose}>
+              Testimonials
+            </a>
+            <a href="#contact" onClick={handleClose}>
+              Contact
+            </a>
+
+            <a
+              href="tel:+918821079210"
+              onClick={handleClose}
+              className="flex items-center gap-2 px-3 py-2 rounded border border-blue-500"
+            >
+              <Phone size={16} color={PRIMARY_BLUE} />
+              <span className="font-semibold text-blue-600">
+                +91 88210 79210
+              </span>
+            </a>
+          </nav>
+        </Drawer>
       </header>
 
       {/* Hero */}
       <section className="relative">
-        <div className="h-144 md:h-96 bg-[linear-gradient(90deg,#3460F4cc,rgba(52,96,244,0.4))] flex items-center">
+        <div
+          className="h-144 md:h-64 bg-[linear-gradient(90deg,#3460F4cc,rgba(52,96,244,0.4))] flex items-center"
+          style={{
+            backgroundImage: "url('./Others/bgimg.jpg')",
+            backgroundSize: "cover",
+          }}
+        >
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="md:w-1/2 text-white">
-              <h1 className="text-4xl md:text-5xl font-extrabold">
+            <div className="text-white py-2">
+              {/* <h1 className="text-4xl md:text-5xl font-extrabold">
                 Travel Pure. Travel Together.
-              </h1>
-              <p className="mt-4 text-lg max-w-xl">
-                Hassle-free vegetarian & Jain-friendly group tours
+              </h1> */}
+              <TypeAnimation
+                sequence={["Travel Pure. Travel Together.", 1000]}
+                cursor={false}
+                speed={50}
+                style={{ fontSize: "2em" }}
+                repeat={Infinity}
+              />
+              <p className="mt-2 text-lg max-w-xl">
+                Hassle-free vegetarian & Jain-friendly group tours.
               </p>
 
-              <div className="mt-6 flex gap-4">
+              <div className="mt-4 flex gap-4">
                 <a
                   href="#tours"
-                  className="px-6 py-3 rounded font-semibold"
+                  className="px-4 py-2 rounded font-bold"
                   style={{ background: PRIMARY_YELLOW, color: PRIMARY_BLUE }}
                 >
-                  View Live Tours
+                  View live tours
                 </a>
-                <button
-                  onClick={() =>
-                    document
-                      .getElementById("contact")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
-                  className="px-6 py-3 rounded border"
-                  style={{
-                    borderColor: PRIMARY_YELLOW,
-                    color: "white",
-                    background: "rgba(255,255,255,0.08)",
-                  }}
-                >
-                  Contact Us
-                </button>
               </div>
             </div>
-
+            {/* 
             <div className="md:w-1/2">
               <img
                 src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&s=4"
                 alt="travel"
                 className="rounded-lg shadow-lg w-full max-h-72 object-cover"
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
 
       {/* Who We Are */}
-      <section id="who" className="py-16">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
+      <section id="who" className="py-4">
+        <div className="max-w-7xl mx-auto px-2 grid md:grid-cols-2 gap-8 items-center">
           <div>
             <h2 className="text-3xl font-bold" style={{ color: PRIMARY_BLUE }}>
-              Who We Are
+              Who we are?
             </h2>
             <p className="mt-4 text-gray-700">
               Travel should be about discovery, not compromise. Yet, as Jain and
@@ -290,7 +319,7 @@ export default function JainTripApp() {
               src="./TourImages/GroupImg.png"
               alt="group"
               className="rounded-lg shadow-md object-cover w-full h-50"
-              style={{ maxHeight: "400px" }}
+              style={{ maxHeight: "360px" }}
             />
           </div>
         </div>
@@ -299,34 +328,44 @@ export default function JainTripApp() {
       {/* What We Do */}
       <section className="py-12 bg-yellow-50">
         <div className="max-w-7xl mx-auto px-6">
-          <h3 className="text-2xl font-bold" style={{ color: PRIMARY_BLUE }}>
-            What We Do
+          <h3 className="text-3xl font-bold" style={{ color: PRIMARY_BLUE }}>
+            What we do?
           </h3>
           <p className="mt-2 text-gray-700">
-            We design all-inclusive travel experiences tailored for Jain and
-            vegetarian travelers. Every package is thoughtfully crafted and
-            covers:
+            We curate all-inclusive group tours tailored for Jain and vegetarian
+            travelers. From hotels, flights, visas, and transfers to verified
+            100% vegetarian/Jain-friendly meals, everything is taken care of.
           </p>
 
           <div className="mt-6 grid md:grid-cols-3 gap-6">
             <div className="p-4 rounded-lg bg-white shadow-sm">
-              <img src="./Others/flight.png" style={{height: "30px", width: "30px"}}/>
+              {/* <img
+                src="./Others/flight.png"
+                style={{ height: "30px", width: "30px" }}
+              /> */}
+              <Plane color="#2f3437" strokeWidth={1} />
               <p className="mt-2 text-sm text-gray-600">
                 Flights, visas, hotels, and transfers.
               </p>
             </div>
             <div className="p-4 rounded-lg bg-white shadow-sm">
-              <img src="./Others/pureVeg.png" style={{height: "40px", width: "40px"}}/>
+              <img
+                src="./Others/food.png"
+                style={{ height: "40px", width: "40px" }}
+              />
               <p className="mt-2 text-sm text-gray-600">
                 100% pure vegetarian or Jain-friendly meals served at trusted
                 restaurants or freshly prepared & packed.
               </p>
             </div>
             <div className="p-4 rounded-lg bg-white shadow-sm">
-              <img src="./Others/captain.png" style={{height: "30px", width: "30px"}}/>
+              <img
+                src="./Others/captain2.png"
+                style={{ height: "30px", width: "30px" }}
+              />
               <p className="mt-2 text-sm text-gray-600">
-                Experienced trip captains to ensure timely meals, smooth
-                logistics and group well-being.
+                A dedicated Trip Captain who understands your preferences and
+                accompanies you throughout.
               </p>
             </div>
           </div>
@@ -342,7 +381,7 @@ export default function JainTripApp() {
                 className="text-3xl font-bold"
                 style={{ color: PRIMARY_BLUE }}
               >
-                Live Group Tours
+                Live group tours
               </h2>
               <p className="mt-1 text-gray-600">
                 Choose a tour and book with confidence — limited seats per group
@@ -371,9 +410,7 @@ export default function JainTripApp() {
                       >
                         {tour.title}
                       </h3>
-                      <p className="text-sm font-bold">
-                        {tour.destination}
-                      </p>
+                      <p className="text-sm font-bold">{tour.destination}</p>
                     </div>
                     <div className="text-right">
                       <div
@@ -436,7 +473,7 @@ export default function JainTripApp() {
       {/* Why Travel With Us */}
       <section id="why" className="py-12" style={{ background: PRIMARY_BLUE }}>
         <div className="max-w-7xl mx-auto px-6 text-white">
-          <h2 className="text-3xl font-bold">Why Travel With Us</h2>
+          <h2 className="text-3xl font-bold">Why travel with us?</h2>
           <p className="mt-2">
             Travel isn’t just about destinations, it’s about peace of mind. With
             decades of expertise and a no-shortcuts philosophy, we make every
@@ -445,7 +482,23 @@ export default function JainTripApp() {
 
           <div className="mt-6 grid md:grid-cols-3 gap-4">
             <div className="flex flex-col items-center text-center p-4 bg-white/10 rounded">
-              <div className="text-2xl font-bold">🍽️</div>
+              <img
+                src="./Others/pureVegIcon.png"
+                alt="Itinerary"
+                style={{ height: "40px", width: "50px" }}
+              />
+              <div className="mt-2 font-semibold">100% Vegetarian Meals</div>
+              <div className="text-sm mt-1">
+                Pure vegetarian and Jain-friendly meals served at trusted
+                restaurants or freshly prepared & packed.
+              </div>
+            </div>
+            <div className="flex flex-col items-center text-center p-4 bg-white/10 rounded">
+              <img
+                src="./Others/expert.png"
+                alt="stay"
+                style={{ height: "40px", width: "40px" }}
+              />
               <div className="mt-2 font-semibold">
                 Expertly Crafted Itineraries
               </div>
@@ -456,21 +509,17 @@ export default function JainTripApp() {
               </div>
             </div>
             <div className="flex flex-col items-center text-center p-4 bg-white/10 rounded">
-              <div className="text-2xl font-bold">⏳</div>
+              <img
+                src="./Others/stay.png"
+                alt="stay"
+                style={{ height: "40px", width: "50px" }}
+              />
               <div className="mt-2 font-semibold">
                 All-Inclusive Convenience
               </div>
               <div className="text-sm mt-1">
                 From flights and hotels to transfers and meals, everything is
                 covered, so you can focus on making memories.
-              </div>
-            </div>
-            <div className="flex flex-col items-center text-center p-4 bg-white/10 rounded">
-              <div className="text-2xl font-bold">🙏</div>
-              <div className="mt-2 font-semibold">Trusted Legacy</div>
-              <div className="text-sm mt-1">
-                Backed by SuperTrip and the Gyan Ganga Group, we stand for
-                authenticity, quality, and reliability.
               </div>
             </div>
           </div>
@@ -613,39 +662,43 @@ export default function JainTripApp() {
         className="bg-white border-t py-2"
         style={{ backgroundColor: PRIMARY_BLUE }}
       >
-        <div className="mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <div style={{ backgroundColor: PRIMARY_BLUE }}>
-              <img
-                src="https://res.cloudinary.com/dkwjkakbc/image/upload/v1755268307/jain_trip_log_without_bg_kuhpke.png"
-                width={150}
-                height={50}
-                alt="logo"
-              />
-            </div>
-          </div>
-
+        <div className="mx-auto px-6 flex flex-col md:flex-col items-center justify-between gap-4">
           <div className="flex gap-8 text-white">
             <div>
-              <div className="font-semibold text-sm">Follow us on</div>
+              <div className="font-semibold text-sm text-center">Follow us on</div>
               <div className="mt-2 flex gap-3 text-gray-600">
                 <img
                   src="./Socials/instagram.svg"
-                  style={{ height: "20px", width: "20px", cursor: "pointer" }}
+                  style={{ height: "30px", width: "30px", cursor: "pointer" }}
                   alt="instagram"
-                  onClick={() => window.open("https://www.instagram.com/jaintripindia?igsh=MW45azJqbzM0Y2N1NA==", "_blank")}
+                  onClick={() =>
+                    window.open(
+                      "https://www.instagram.com/jaintripindia?igsh=MW45azJqbzM0Y2N1NA==",
+                      "_blank"
+                    )
+                  }
                 />
                 <img
                   src="./Socials/facebook.svg"
-                  style={{ height: "20px", width: "20px", cursor: "pointer" }}
+                  style={{ height: "30px", width: "30px", cursor: "pointer" }}
                   alt="facebook"
-                  onClick={() => window.open("https://www.facebook.com/share/168ZcpHLeF/?mibextid=wwXIfr", "_blank")}
+                  onClick={() =>
+                    window.open(
+                      "https://www.facebook.com/share/168ZcpHLeF/?mibextid=wwXIfr",
+                      "_blank"
+                    )
+                  }
                 />
                 <img
                   src="./Socials/youtube.svg"
-                  style={{ height: "20px", width: "20px", cursor: "pointer" }}
+                  style={{ height: "30px", width: "30px", cursor: "pointer" }}
                   alt="youtube"
-                  onClick={() => window.open("https://youtube.com/@jaintripindia?si=-NllTMUcPD68DWmx", "_blank")}
+                  onClick={() =>
+                    window.open(
+                      "https://youtube.com/@jaintripindia?si=-NllTMUcPD68DWmx",
+                      "_blank"
+                    )
+                  }
                 />
               </div>
             </div>

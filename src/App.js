@@ -1,4 +1,3 @@
-import './App.css';
 import JainTripApp from './JainTrip';
 
 function App() {
